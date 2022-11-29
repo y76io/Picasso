@@ -1,0 +1,380 @@
+.top-nav {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px 40px;
+  color: white;
+  font-size: 30px;
+  .logo {
+    display: flex;
+    align-items: center;
+    font-size: 35px;
+    column-gap: 15px;
+    cursor: pointer;
+  }
+}
+
+.big-container {
+  width: 90%;
+  margin: 40px auto;
+  .prompt-section {
+    width: 100%;
+    height: 55px;
+    display: flex;
+    .input {
+      width: 85%;
+      height: 100%;
+      position: relative;
+      i {
+        position: absolute;
+        color: white;
+        top: 50%;
+        transform: translateY(-50%) rotate(270deg);
+        left: 40px;
+        color: #969696;
+        font-size: 20px;
+      }
+      input {
+        width: 100%;
+        height: 100%;
+        border: none;
+        padding: 0px;
+        background-color: #303030;
+        border-top-left-radius: 30px;
+        border-bottom-left-radius: 30px;
+        text-indent: 80px;
+        font-size: 18px;
+        color: white;
+        outline: none;
+      }
+    }
+
+    .generate {
+      width: 15%;
+      height: 100%;
+      background-color: #69d7f0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-top-right-radius: 30px;
+      border-bottom-right-radius: 30px;
+      font-size: 25px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  }
+  .bottom-section {
+    width: 100%;
+    background-color: #303030;
+    border-radius: 30px;
+    margin-top: 30px;
+    padding-bottom: 20px;
+    .tabs {
+      display: flex;
+      height: 60px;
+      align-items: center;
+      .tab {
+        width: 33.33%;
+        text-align: center;
+        font-size: 30px;
+        color: white;
+        cursor: pointer;
+        font-weight: bold;
+
+        position: relative;
+        &.active {
+          color: #69d7f0;
+
+          &::before {
+            position: absolute;
+            content: "";
+            width: 90%;
+            height: 4px;
+            background-color: #69d7f0;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: -15px;
+            -webkit-animation: slide-right 0.5s
+              cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+            animation: slide-right 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)
+              both;
+          }
+        }
+        &:not(.last) {
+          &::after {
+            position: absolute;
+            content: "";
+            height: 35px;
+            width: 2px;
+            background-color: #606060;
+            right: 0px;
+          }
+        }
+      }
+    }
+    .image-advanced {
+      width: 100%;
+      height: 600px;
+      display: flex;
+      margin: 10px 20px;
+      .image {
+        width: 80%;
+        height: 100%;
+        background-color: #535353;
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        .download {
+          width: 55px;
+          height: 40px;
+          background-color: #292929;
+          color: #69d7f0;
+          font-size: 20px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 10px;
+          position: absolute;
+          top: 20px;
+          right: 20px;
+          cursor: pointer;
+        }
+
+        .loading-div {
+          width: 50%;
+          height: 50%;
+          background-color: white;
+          border-radius: 15px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          position: relative;
+          &.scale-up {
+            -webkit-animation: scale-up-center 15s
+              cubic-bezier(0.39, 0.575, 0.565, 1) infinite both;
+            animation: scale-up-center 15s cubic-bezier(0.39, 0.575, 0.565, 1)
+              infinite both;
+          }
+          .circle {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            height: 200px;
+            -webkit-animation: rotate-center 5s ease-in-out infinite both;
+            animation: rotate-center 5s ease-in-out infinite both;
+          }
+        }
+        .dwn {
+          width: 512px;
+          height: 512px;
+          object-fit: cover;
+        }
+      }
+      .advanced {
+        width: calc(20% - 20px);
+        margin-top: 15px;
+        .title {
+          text-align: center;
+          color: #69d7f0;
+          font-size: 26px;
+          font-weight: bold;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          column-gap: 10px;
+          cursor: pointer;
+          i {
+            transition: 0.3s all;
+
+            &.rotate {
+              transform: rotate(180deg);
+              transition: 0.3s all;
+            }
+          }
+        }
+        .advanced-div {
+          width: 90%;
+          margin: 20px auto;
+          display: flex;
+          flex-direction: column;
+          row-gap: 15px;
+
+          .upload-image {
+            width: 100%;
+            height: 50px;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 4px dashed white;
+            cursor: pointer;
+          }
+
+          .one-adv {
+            .top {
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              color: white;
+              font-size: 16px;
+              .range {
+                font-size: 8px;
+                font-style: normal oblique;
+              }
+            }
+            .bottom {
+              height: 50px;
+              display: flex;
+              margin-top: 10px;
+              .minus {
+                width: 50px;
+                height: 50px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #292929;
+                background-color: #69d7f0;
+                font-weight: bold;
+                font-size: 20px;
+                cursor: pointer;
+                &.disabled {
+                  color: white;
+                  background-color: #3b3b3b;
+                }
+              }
+              input {
+                width: calc(100% - 100px);
+                height: 100%;
+                border: none;
+                padding: none;
+                background-color: #292929;
+                outline: none;
+                color: white;
+                text-align: center;
+                font-size: 16px;
+                &::-webkit-outer-spin-button,
+                &::-webkit-inner-spin-button {
+                  -webkit-appearance: none;
+                  margin: 0;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+/* ----------------------------------------------
+ * Generated by Animista on 2022-11-29 8:19:28
+ * Licensed under FreeBSD License.
+ * See http://animista.net/license for more info. 
+ * w: http://animista.net, t: @cssanimista
+ * ---------------------------------------------- */
+
+/**
+ * ----------------------------------------
+ * animation slide-right
+ * ----------------------------------------
+ */
+@-webkit-keyframes slide-right {
+  0% {
+    -webkit-transform: translateX(-100%);
+    transform: translateX(-100%);
+  }
+  100% {
+    -webkit-transform: translateX(-50%);
+    transform: translateX(-50%);
+  }
+}
+@keyframes slide-right {
+  0% {
+    -webkit-transform: translateX(-100%);
+    transform: translateX(-100%);
+  }
+  100% {
+    -webkit-transform: translateX(-50%);
+    transform: translateX(-50%);
+  }
+}
+
+/* ----------------------------------------------
+ * Generated by Animista on 2022-11-29 9:10:13
+ * Licensed under FreeBSD License.
+ * See http://animista.net/license for more info. 
+ * w: http://animista.net, t: @cssanimista
+ * ---------------------------------------------- */
+
+/**
+ * ----------------------------------------
+ * animation slide-bottom
+ * ----------------------------------------
+ */
+/* ----------------------------------------------
+ * Generated by Animista on 2022-11-29 13:3:34
+ * Licensed under FreeBSD License.
+ * See http://animista.net/license for more info. 
+ * w: http://animista.net, t: @cssanimista
+ * ---------------------------------------------- */
+
+/**
+ * ----------------------------------------
+ * animation rotate-center
+ * ----------------------------------------
+ */
+@-webkit-keyframes rotate-center {
+  0% {
+    -webkit-transform: rotate(0);
+    transform: rotate(0);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+@keyframes rotate-center {
+  0% {
+    -webkit-transform: translate(-50%, -50%) rotate(0);
+    transform: translate(-50%, -50%) rotate(0);
+  }
+  100% {
+    -webkit-transform: translate(-50%, -50%) rotate(360deg);
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+/* ----------------------------------------------
+ * Generated by Animista on 2022-11-29 13:12:9
+ * Licensed under FreeBSD License.
+ * See http://animista.net/license for more info. 
+ * w: http://animista.net, t: @cssanimista
+ * ---------------------------------------------- */
+
+/**
+ * ----------------------------------------
+ * animation scale-up-center
+ * ----------------------------------------
+ */
+@-webkit-keyframes scale-up-center {
+  0% {
+    -webkit-transform: scale(1);
+    transform: scale(1);
+  }
+  100% {
+    -webkit-transform: scale(2);
+    transform: scale(2);
+  }
+}
+@keyframes scale-up-center {
+  0% {
+    -webkit-transform: scale(1);
+    transform: scale(1);
+  }
+  100% {
+    -webkit-transform: scale(2);
+    transform: scale(2);
+  }
+}
