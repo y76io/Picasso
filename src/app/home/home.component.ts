@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import * as $ from 'jquery';
 import { HttpClient } from '@angular/common/http';
+import { CanvasWhiteboardOptions } from 'ng2-canvas-whiteboard';
+import axios from 'axios';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-home',
@@ -8,7 +11,7 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private spinner: NgxSpinnerService) {}
   mode = 'text';
   advanced: any = false;
   min_images: number = 1;
@@ -30,9 +33,91 @@ export class HomeComponent implements OnInit {
   prompt = '';
   init_image: any = '';
   images = [];
+  inpaint_images: any = [];
+  color = 'white';
+  image_to_image_results = [];
+  canvas_image = '';
+  options: CanvasWhiteboardOptions = {
+    drawingEnabled: true,
+    drawButtonEnabled: true,
+    drawButtonClass: 'drawButtonClass',
+    drawButtonText: 'Draw',
+    clearButtonEnabled: true,
+    clearButtonClass: 'clearButtonClass',
+    clearButtonText: 'Clear',
+    undoButtonText: 'Undo',
+    undoButtonEnabled: true,
+    redoButtonText: 'Redo',
+    redoButtonEnabled: true,
+    redoButtonClass: 'redoButtonClass',
+    colorPickerEnabled: true,
+    fillColorPickerText: 'Fill',
+    strokeColorPickerText: 'Stroke',
+    saveDataButtonEnabled: true,
+    saveDataButtonText: 'Save',
+    lineWidth: 5,
+    strokeColor: 'white',
+    shouldDownloadDrawing: true,
+    startingColor: 'transparent',
+    strokeColorPickerEnabled: false,
+  };
+
+  strokeOn = false;
+
+  setStroke() {
+    this.strokeOn = !this.strokeOn;
+  }
+
+  changeStrokeWidth(width: any) {
+    this.options = {
+      ...this.options,
+      lineWidth: width,
+    };
+    this.strokeOn = false;
+  }
+
+  uploadImage(event: any) {
+    const file = event.target.files[0];
+    const reader: any = new FileReader();
+    reader.onloadend = () => {
+      var background = new Image();
+      background.src = reader.result;
+      var c: any = document.getElementsByClassName('canvas_whiteboard')[0];
+      var ctx = c.getContext('2d');
+
+      background.onload = function () {
+        ctx.drawImage(background, 0, 0, c.width, c.height);
+      };
+    };
+    reader.readAsDataURL(file);
+  }
+
+  canvasImageClick() {
+    $('#canvas_image').click();
+  }
+
+  fillColor() {
+    var canvas: any = document.getElementsByClassName('canvas_whiteboard')[0];
+    var ctx = canvas.getContext('2d');
+    ctx.fillStyle = this.options.strokeColor;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  }
+
+  changeColor(event: any) {
+    this.options = {
+      ...this.options,
+      strokeColor: event.target.value,
+    };
+  }
 
   setMode(mode: any) {
     this.mode = mode;
+    this.canvas_image = '';
+    this.options = {
+      ...this.options,
+      strokeColor: 'white',
+      lineWidth: 5,
+    };
   }
 
   minusImage() {
@@ -152,7 +237,7 @@ export class HomeComponent implements OnInit {
     $('.advanced .title i').toggleClass('rotate');
   }
 
-  async getUserData() {
+  async textToImage() {
     this.loading = true;
 
     // try {
@@ -195,13 +280,113 @@ export class HomeComponent implements OnInit {
       );
   }
 
+  download() {
+    $('.canvas_whiteboard_button-save').click();
+  }
+  undo() {
+    $('.canvas_whiteboard_button-undo').click();
+  }
+
+  redo() {
+    $('.canvas_whiteboard_button-redo').click();
+  }
+
+  clear() {
+    this.canvas_image = '';
+    $('.canvas_whiteboard_button-clear').click();
+  }
+  async imageToImage() {
+    this.spinner.show();
+    this.image_to_image_results = [];
+
+    let canvas = document.getElementsByClassName(
+      'canvas_whiteboard'
+    )[0] as HTMLCanvasElement;
+
+    let mask_data_url = canvas.toDataURL();
+
+    if (!this.prompt) {
+      this.spinner.hide();
+
+      alert('Please enter a prompt');
+      return;
+    }
+    if (!mask_data_url) {
+      this.spinner.hide();
+
+      alert('Please choose a mask image');
+      return;
+    } else {
+      await axios
+        .post('http://35.209.131.22:5000/api/imgtoimg', {
+          prompt: this.prompt,
+          init_image: mask_data_url,
+          steps: this.steps,
+          seed: this.seed,
+          scale: this.scale,
+          strength: this.strength,
+        })
+        .then(async (response) => {
+          this.image_to_image_results = await response.data;
+          this.spinner.hide();
+        })
+        .catch((error) => {
+          this.spinner.hide();
+          alert('Something went wrong!');
+        });
+    }
+  }
+
+  uploadInpaintImage(event: any) {
+    const file = event.target.files[0];
+    const reader: any = new FileReader();
+    reader.onloadend = () => {
+      var background = new Image();
+      this.canvas_image = reader.result;
+      background.src = reader.result;
+      var c: any = document.getElementsByClassName('canvas_whiteboard')[0];
+      var ctx = c.getContext('2d');
+
+      background.onload = function () {
+        ctx.drawImage(background, 0, 0, c.width, c.height);
+      };
+    };
+    reader.readAsDataURL(file);
+  }
+
+  inpaintUploadClick() {
+    this.canvas_image = 'dd';
+    $('#inpaint-image').click();
+  }
+
+  editClick() {
+    var background = new Image();
+    if (this.mode === 'image') {
+      background.src =
+        'data:image/jpeg;base64,' + this.image_to_image_results[0];
+    } else {
+      background.src = 'data:image/jpeg;base64,' + this.inpaint_images[0];
+    }
+    var c: any = document.getElementsByClassName('canvas_whiteboard')[0];
+    var ctx = c.getContext('2d');
+
+    background.onload = function () {
+      ctx.drawImage(background, 0, 0, c.width, c.height);
+    };
+  }
+
   generateClick() {
     this.images = [];
+    this.image_to_image_results = [];
     if (!this.prompt) {
       alert('Please enter a prompt !');
     } else {
       if (this.mode === 'text') {
-        this.getUserData();
+        this.textToImage();
+      } else if (this.mode === 'image') {
+        this.imageToImage();
+      } else if (this.mode === 'inpaint') {
+        this.inpainting();
       }
     }
   }
@@ -212,6 +397,53 @@ export class HomeComponent implements OnInit {
 
   imageUpload(event: any) {
     this.init_image = event.target.files[0];
+  }
+
+  async inpainting() {
+    this.spinner.show();
+    this.inpaint_images = [];
+
+    let canvas = document.getElementsByClassName(
+      'canvas_whiteboard'
+    )[0] as HTMLCanvasElement;
+
+    let mask_data_url = canvas.toDataURL();
+
+    if (!this.prompt) {
+      this.spinner.hide();
+
+      alert('Please enter a prompt');
+      return;
+    }
+    if (!mask_data_url) {
+      this.spinner.hide();
+
+      alert('Please choose a mask image');
+      return;
+    }
+    if (!this.canvas_image) {
+      this.spinner.hide();
+
+      alert('Please choose an init image');
+      return;
+    } else {
+      await axios
+        .post('http://35.209.131.22:5000/api/inpainting/', {
+          prompt: this.prompt,
+          mask: mask_data_url,
+          init_image: this.canvas_image,
+        })
+        .then(async (response) => {
+          this.inpaint_images = await response.data;
+          console.log(this.inpaint_images);
+          this.spinner.hide();
+        })
+        .catch((error) => {
+          this.spinner.hide();
+
+          alert('Something went wrong!');
+        });
+    }
   }
 
   ngOnInit(): void {}

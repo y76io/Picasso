@@ -1,3 +1,11 @@
+<ngx-spinner
+  bdColor="rgba(51,51,51,0.8)"
+  size="medium"
+  color="#fff"
+  type="ball-scale-multiple"
+>
+  <p style="font-size: 20px; color: white">Loading...</p>
+</ngx-spinner>
 <div class="top-nav">
   <div class="logo"><img src="../../assets/logo.png" />PICASSO</div>
   <div>
@@ -42,18 +50,47 @@
       </div>
     </div>
     <div class="image-advanced">
-      <div class="image">
+      <div
+        class="image"
+        [style.display]="
+          mode === 'text' || mode === 'inpaint' ? 'flex' : 'unset'
+        "
+      >
         <a
           class="download"
-          *ngIf="images.length > 0"
+          *ngIf="images.length > 0 && mode === 'text'"
           href="data:image/jpeg;base64,{{ images[0] }}"
           download="image.jpg"
         >
           <i class="fa-solid fa-download"></i>
         </a>
         <div
+          class="img-tools"
+          *ngIf="mode === 'image' && image_to_image_results.length > 0"
+        >
+          <img src="../../assets/reverse.png" (click)="editClick()" />
+          <a
+            href="data:image/jpeg;base64,{{ image_to_image_results[0] }}"
+            download="image.jpg"
+          >
+            <i class="fa-solid fa-download"></i>
+          </a>
+        </div>
+        <div
+          class="img-tools"
+          *ngIf="mode === 'inpaint' && inpaint_images.length > 0"
+        >
+          <img src="../../assets/reverse.png" (click)="editClick()" />
+          <a
+            href="data:image/jpeg;base64,{{ inpaint_images[0] }}"
+            download="image.jpg"
+          >
+            <i class="fa-solid fa-download"></i>
+          </a>
+        </div>
+        <div
           class="loading-div"
-          *ngIf="images.length === 0"
+          *ngIf="images.length === 0 && mode === 'text'"
           [class.scale-up]="loading"
         >
           <img *ngIf="loading" class="circle" src="../../assets/circle.png" />
@@ -62,15 +99,101 @@
 
         <img
           class="dwn"
+          [ngIf]="images.length === 0 && mode === 'text'"
           *ngFor="let image of images"
           src="data:image/jpeg;base64,{{ image }}"
         />
+        <div class="image-to-image" *ngIf="mode === 'image'">
+          <div class="left">
+            <div class="color">
+              <input
+                type="color"
+                (input)="changeColor($event)"
+                value="#ffffff"
+              />
+            </div>
+            <div class="stroke">
+              <img (click)="setStroke()" src="../../assets/stroke.png" />
+              <div class="stroke_options" *ngIf="strokeOn">
+                <div class="option" (click)="changeStrokeWidth(5)">
+                  <div class="stroke_5px"></div>
+                </div>
+                <div class="option" (click)="changeStrokeWidth(10)">
+                  <div class="stroke_10px"></div>
+                </div>
+                <div class="option" (click)="changeStrokeWidth(20)">
+                  <div class="stroke_20px"></div>
+                </div>
+              </div>
+            </div>
+            <!-- <div class="drawBtn"><img src="../../assets/pen.png" /></div> -->
+            <div (click)="clear()"><img src="../../assets/eraser.png" /></div>
+            <div (click)="fillColor()"><img src="../../assets/fill.png" /></div>
+            <div (click)="undo()"><img src="../../assets/undo.png" /></div>
+            <div (click)="redo()"><img src="../../assets/redo.png" /></div>
+            <div (click)="canvasImageClick()">
+              <img src="../../assets/background.png" />
+            </div>
+          </div>
+          <div class="right">
+            <app-canvas [canvasOptions]="options"></app-canvas>
+          </div>
+        </div>
+        <div
+          class="inpaint-upload"
+          *ngIf="mode === 'inpaint' && !canvas_image"
+          (click)="inpaintUploadClick()"
+        >
+          <img src="../../assets/inpaint.png" />
+          <div>Upload The Image</div>
+        </div>
+        <div class="image-to-image" *ngIf="mode === 'inpaint' && canvas_image">
+          <div class="left">
+            <div class="stroke">
+              <img (click)="setStroke()" src="../../assets/stroke.png" />
+              <div class="stroke_options" *ngIf="strokeOn">
+                <div class="option" (click)="changeStrokeWidth(5)">
+                  <div class="stroke_5px"></div>
+                </div>
+                <div class="option" (click)="changeStrokeWidth(10)">
+                  <div class="stroke_10px"></div>
+                </div>
+                <div class="option" (click)="changeStrokeWidth(20)">
+                  <div class="stroke_20px"></div>
+                </div>
+              </div>
+            </div>
+            <!-- <div class="drawBtn"><img src="../../assets/pen.png" /></div> -->
+            <div (click)="clear()"><img src="../../assets/eraser.png" /></div>
+            <div (click)="undo()"><img src="../../assets/undo.png" /></div>
+            <div (click)="redo()"><img src="../../assets/redo.png" /></div>
+          </div>
+          <div class="right">
+            <app-canvas [canvasOptions]="options"></app-canvas>
+          </div>
+        </div>
       </div>
       <div class="advanced">
-        <div class="title" (click)="toggleAdvanced()">
+        <div class="result-image" *ngIf="mode === 'image'">
+          <img
+            *ngIf="image_to_image_results.length > 0"
+            src="data:image/jpeg;base64,{{ image_to_image_results[0] }}"
+          />
+        </div>
+        <div class="result-image" *ngIf="mode === 'inpaint'">
+          <img
+            *ngIf="inpaint_images.length > 0"
+            src="data:image/jpeg;base64,{{ inpaint_images[0] }}"
+          />
+        </div>
+        <div
+          class="title"
+          (click)="toggleAdvanced()"
+          *ngIf="mode !== 'inpaint'"
+        >
           Advanced Options <i class="fa-solid fa-chevron-down"></i>
         </div>
-        <div class="advanced-div">
+        <div class="advanced-div" *ngIf="mode !== 'inpaint'">
           <form style="display: contents">
             <div class="one-adv">
               <div class="top">
@@ -78,11 +201,7 @@
                 <div class="range">1-99</div>
               </div>
               <div class="bottom">
-                <div
-                  class="minus"
-                  (click)="minusImage()"
-                  [class.disabled]="samples - 1 < min_images"
-                >
+                <div class="minus" [class.disabled]="samples - 1 < min_images">
                   <i class="fa-solid fa-minus"></i>
                 </div>
                 <input
@@ -91,13 +210,9 @@
                   name="samples"
                   min="1"
                   max="4"
-                  (keyup)="changeSample($event)"
+                  disabled="true"
                 />
-                <div
-                  class="minus"
-                  (click)="plusImage()"
-                  [class.disabled]="samples + 1 > max_images"
-                >
+                <div class="minus" [class.disabled]="true">
                   <i class="fa-solid fa-plus"></i>
                 </div>
               </div>
@@ -225,7 +340,11 @@
                 </div>
               </div>
             </div>
-            <div class="upload-image" (click)="clickUpload()">
+            <div
+              class="upload-image"
+              (click)="clickUpload()"
+              *ngIf="mode === 'text'"
+            >
               {{ init_image ? init_image.name : "Upload an initial image" }}
             </div>
           </form>
@@ -238,5 +357,18 @@
   id="init-image"
   type="file"
   (change)="imageUpload($event)"
+  style="visibility: hidden"
+/>
+<input
+  id="canvas_image"
+  type="file"
+  (change)="uploadImage($event)"
+  style="visibility: hidden"
+/>
+
+<input
+  id="inpaint-image"
+  type="file"
+  (change)="uploadInpaintImage($event)"
   style="visibility: hidden"
 />
