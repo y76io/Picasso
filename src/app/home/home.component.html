@@ -96,13 +96,13 @@
           <img *ngIf="loading" class="circle" src="../../assets/circle.png" />
           <img src="../../assets/image.png" />
         </div>
-
-        <img
-          class="dwn"
-          [ngIf]="images.length === 0 && mode === 'text'"
-          *ngFor="let image of images"
-          src="data:image/jpeg;base64,{{ image }}"
-        />
+        <div *ngIf="images.length > 0 && mode === 'text'">
+          <img
+            class="dwn"
+            *ngFor="let image of images"
+            src="data:image/jpeg;base64,{{ image }}"
+          />
+        </div>
         <div class="image-to-image" *ngIf="mode === 'image'">
           <div class="left">
             <div class="color">

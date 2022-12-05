@@ -78,6 +78,7 @@ export class HomeComponent implements OnInit {
   };
 
   strokeOn = false;
+  midjourny = false;
 
   setStroke() {
     this.strokeOn = !this.strokeOn;
@@ -269,6 +270,7 @@ export class HomeComponent implements OnInit {
     // }
 
     let formData: FormData = new FormData();
+    this.midjourny = this.prompt.includes('mdjrny-v4 style') ? true : false;
     const data = {
       prompt: this.prompt,
       samples: this.samples,
@@ -276,6 +278,7 @@ export class HomeComponent implements OnInit {
       scale: this.scale,
       seed: this.seed,
       strength: this.strength,
+      midjourny: this.midjourny,
     };
 
     formData.append('init_image', this.init_image);
