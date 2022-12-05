@@ -270,7 +270,7 @@ export class HomeComponent implements OnInit {
     // }
 
     let formData: FormData = new FormData();
-    this.midjourny = this.prompt.includes('mdjrny-v4 style') ? true : false;
+    this.midjourny = this.prompt.includes('mdjrny-v4 style') ? true : true;
     const data = {
       prompt: this.prompt,
       samples: this.samples,
