@@ -1,0 +1,70 @@
+<div class="navbar">
+  <div
+    style="
+      display: flex;
+      color: white;
+      align-items: center;
+      font-size: 25px;
+      column-gap: 15px;
+      padding: 10px 20px;
+    "
+  >
+    <img src="../../assets/logo.png" />
+    <div>PICASSO</div>
+  </div>
+
+  <div class="last-nav">
+    <div
+      data-toggle="tooltip"
+      data-placement="top"
+      title="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed"
+      class="question"
+    >
+      ?
+    </div>
+  </div>
+</div>
+
+<div class="auth-container">
+  <div class="left">
+    <img src="../../assets/big-logo.png" />
+    <div class="pyg-title">PICASSO</div>
+    <div class="already">
+      <div>Already have an account?</div>
+      <div>Log in with your account</div>
+    </div>
+    <div class="signin-button" (click)="navigateToSignin()">Sign in</div>
+  </div>
+
+  <div class="right">
+    <div class="right-div">
+      <div class="create-title">Create account</div>
+      <div class="using">Using social networks</div>
+      <div class="social-networks">
+        <div class="circle"></div>
+        <div class="circle"></div>
+        <div class="circle"></div>
+      </div>
+      <div class="using">or using your email account</div>
+      <div class="form">
+        <form style="display: content" (ngSubmit)="register_action()">
+          <div class="label">First Name</div>
+          <input type="text" [(ngModel)]="first_name" name="first_name" />
+          <div class="label">Last Name</div>
+          <input type="text" [(ngModel)]="last_name" name="last_name" />
+          <div class="label">Email</div>
+          <input type="email" [(ngModel)]="email" name="email" />
+          <div class="label">Password</div>
+          <input type="password" [(ngModel)]="password" name="password" />
+          <div class="label">Confirm Password</div>
+          <input
+            type="password"
+            [(ngModel)]="conf_password"
+            name="conf_password"
+          />
+          <button type="submit" class="signup-btn">Sign up</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

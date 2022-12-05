@@ -1,3 +1,5 @@
+import { Router } from '@angular/router';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Component, OnInit } from '@angular/core';
 import * as $ from 'jquery';
 import { HttpClient } from '@angular/common/http';
@@ -11,7 +13,20 @@ import { NgxSpinnerService } from 'ngx-spinner';
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
-  constructor(private http: HttpClient, private spinner: NgxSpinnerService) {}
+  constructor(
+    private http: HttpClient,
+    private spinner: NgxSpinnerService,
+    private afu: AngularFireAuth,
+    private router: Router
+  ) {
+    this.afu.authState.subscribe((auth: any) => {
+      this.authState = auth;
+      if (!this.authState) {
+        this.router.navigate(['/login']);
+      }
+    });
+  }
+  authState = null;
   mode = 'text';
   advanced: any = false;
   min_images: number = 1;

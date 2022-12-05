@@ -1,0 +1,63 @@
+<div class="navbar">
+  <div
+    style="
+      display: flex;
+      color: white;
+      align-items: center;
+      font-size: 25px;
+      column-gap: 15px;
+      padding: 10px 20px;
+    "
+  >
+    <img src="../../assets/logo.png" />
+    <div>PICASSO</div>
+  </div>
+
+  <div class="last-nav">
+    <div
+      data-toggle="tooltip"
+      data-placement="top"
+      title="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed"
+      class="question"
+    >
+      ?
+    </div>
+  </div>
+</div>
+
+<div class="auth-container">
+  <div class="right">
+    <div class="right-div">
+      <div class="create-title">Log in to your account</div>
+
+      <div class="using">Using social networks</div>
+      <div class="social-networks">
+        <div class="circle"></div>
+        <div class="circle"></div>
+        <div class="circle"></div>
+      </div>
+      <div class="using">or using your email account</div>
+      <div id="login-form" class="form">
+        <form style="display: content" (ngSubmit)="login()">
+          <div class="label">Email</div>
+          <input type="email" [(ngModel)]="email" name="email" />
+          <div class="label">Password</div>
+          <input type="password" [(ngModel)]="password" name="password" />
+          <div class="forgot" (click)="navigateToForgot()">
+            Forgot your password?
+          </div>
+          <button type="submit" class="signup-btn">Sign in</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="left">
+    <img src="../../assets/big-logo.png" />
+    <div class="pyg-title">PYGMALION</div>
+    <div class="already">
+      <div>Still don't have an account?</div>
+      <div>Join us now</div>
+    </div>
+    <div (click)="navigateToSignup()" class="signin-button">Sign up</div>
+  </div>
+</div>

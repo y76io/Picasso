@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "hookline-magic-f926f": {
+      "hosting": {
+        "Picasso": [
+          "picasso-y76"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "hookline-magic-f926f"
+  }
+}
